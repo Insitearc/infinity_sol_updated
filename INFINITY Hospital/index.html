@@ -40,6 +40,8 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- SEO Schema Markup (JSON-LD) -->
     <script type="application/ld+json">
@@ -92,14 +94,15 @@
 
 <body>
 
+
+
     <!-- TOP INFO BAR -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-contact-info">
                 <span class="info-item">
                     <svg class="icon" viewBox="0 0 24 24">
-                        <path
-                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                     </svg>
                     Care Helpline: <a href="tel:+919423983749" class="emergency-link">+91 94239 83749</a>
                 </span>
@@ -135,7 +138,15 @@
             <nav class="nav-menu" id="navMenu">
                 <a href="index.html" class="nav-link active">Home</a>
                 <a href="about.html" class="nav-link">About Us</a>
-                <a href="specialties.html" class="nav-link">Specialties</a>
+                <div class="nav-dropdown">
+                    <a href="services.html" class="nav-link nav-link-dropdown" aria-haspopup="true" aria-expanded="false" id="servicesDropdownToggle">Services <span class="dropdown-chevron" aria-hidden="true"></span></a>
+                    <div class="dropdown-menu" role="menu" aria-labelledby="servicesDropdownToggle">
+                        <a href="services.html?filter=surgery" class="dropdown-item">IVF & Fertility</a>
+                        <a href="services.html?filter=maternity" class="dropdown-item">Pregnancy Care</a>
+                        <a href="services.html?filter=icu" class="dropdown-item">NICU & Neonatal Care</a>
+                        <a href="services.html?filter=laparoscopy" class="dropdown-item">Fertility Endoscopy</a>
+                    </div>
+                </div>
                 <a href="doctors.html" class="nav-link">Our Doctors</a>
                 <a href="blog.html" class="nav-link">Blog</a>
                 <a href="careers.html" class="nav-link">Careers</a>
@@ -145,38 +156,9 @@
             <!-- CTA & Burger Action Buttons -->
             <div class="nav-actions">
                 <a href="index.html#appointment" class="btn btn-primary btn-sm hide-tablet">Book Consultation</a>
-                <button class="burger-menu" id="burgerToggle" aria-label="Toggle Navigation">
-                    <span class="line"></span>
-                    <span class="line"></span>
-                    <span class="line"></span>
-                </button>
             </div>
         </div>
     </header>
-
-    <!-- MOBILE DRAWER MENU -->
-    <div class="mobile-drawer" id="mobileDrawer">
-        <div class="drawer-header">
-            <span class="brand-name">INFINITY MATERNITY & IVF CENTRE</span>
-            <button class="btn-close" id="drawerClose" aria-label="Close Navigation">&times;</button>
-        </div>
-        <nav class="drawer-nav">
-            <a href="index.html" class="drawer-link">Home</a>
-            <a href="about.html" class="drawer-link">About Us</a>
-            <a href="specialties.html" class="drawer-link">Specialties & Wards</a>
-            <a href="doctors.html" class="drawer-link">Our Doctors</a>
-            <a href="blog.html" class="drawer-link">Blog</a>
-            <a href="careers.html" class="drawer-link">Careers</a>
-            <a href="contact.html" class="drawer-link">Contact Us</a>
-            <div class="drawer-cta-wrapper">
-                <a href="index.html#appointment" class="btn btn-primary btn-block drawer-booking-btn">Book
-                    Consultation</a>
-                <a href="tel:+919423983749" class="btn btn-danger btn-block text-center mt-2">Helpline: +91 94239
-                    83749</a>
-            </div>
-        </nav>
-    </div>
-    <div class="drawer-overlay" id="drawerOverlay"></div>
 
     <main>
         <!-- HERO BANNER SECTION -->
@@ -209,10 +191,7 @@
                         support to help you build the family you've always dreamed of.</p>
 
 
-
-
                 </div>
-
 
             </div>
 
@@ -450,15 +429,29 @@
                             <!-- Department and Doctor Select Grid -->
                             <div class="form-group-row">
                                 <div class="form-group">
-                                    <label for="bookingDepartment">Select Service <span class="req">*</span></label>
-                                    <select id="bookingDepartment" name="department" required>
-                                        <option value="" disabled selected>-- Choose Service --</option>
-                                        <option value="surgery">IVF & Fertility Solutions</option>
-                                        <option value="maternity">Pregnancy & Maternity Care</option>
-                                        <option value="icu">NICU & Neonatal Care</option>
-                                        <option value="laparoscopy">Fertility Endoscopy & Women's Health</option>
+                                    <label for="bookingDepartment">Services <span class="req">*</span></label>
+                                    <!-- Custom Select Wrapper -->
+                                    <div class="custom-select-wrapper">
+                                        <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="booking-custom-options-list">
+                                            <span>Select Service</span>
+                                            <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </div>
+                                        <div class="custom-options-container" id="booking-custom-options-list" role="listbox">
+                                            <div class="custom-option" data-value="IVF & Fertility" role="option">IVF & Fertility</div>
+                                            <div class="custom-option" data-value="Pregnancy Care" role="option">Pregnancy Care</div>
+                                            <div class="custom-option" data-value="NICU & Neonatal Care" role="option">NICU & Neonatal Care</div>
+                                            <div class="custom-option" data-value="Fertility Endoscopy" role="option">Fertility Endoscopy</div>
+                                        </div>
+                                    </div>
+                                    <!-- Hidden select backing element -->
+                                    <select id="bookingDepartment" name="department" required style="display: none;">
+                                        <option value="" disabled selected>Select Service</option>
+                                        <option value="IVF & Fertility">IVF & Fertility</option>
+                                        <option value="Pregnancy Care">Pregnancy Care</option>
+                                        <option value="NICU & Neonatal Care">NICU & Neonatal Care</option>
+                                        <option value="Fertility Endoscopy">Fertility Endoscopy</option>
                                     </select>
-                                    <span class="error-msg" id="errDepartment">Please select a service category.</span>
+                                    <span class="error-msg" id="errDepartment">Please select a service.</span>
                                 </div>
 
                                 <div class="form-group">
@@ -506,7 +499,7 @@
                                 <div class="form-group">
                                     <label for="bookingPhone">Phone Number <span class="req">*</span></label>
                                     <input type="tel" id="bookingPhone" name="phone" placeholder="Enter 10-digit number"
-                                        required>
+                                        maxlength="10" inputmode="numeric" pattern="[0-9]{10}" required>
                                     <span class="error-msg" id="errPhone">Please enter a valid 10-digit phone
                                         number.</span>
                                 </div>
@@ -631,6 +624,8 @@
         </section>
     </main>
 
+    <!-- standalone whatsapp-fab removed to avoid duplication; social icons use .floating-actions -->
+
     <!-- FOOTER -->
     <footer class="main-footer">
         <div class="container footer-grid">
@@ -663,7 +658,7 @@
                 <ul class="footer-links">
                     <li><a href="index.html">Home Base</a></li>
                     <li><a href="about.html">About Our Mission</a></li>
-                    <li><a href="specialties.html">Specialties & Wards</a></li>
+                    <li><a href="services.html">Services</a></li>
                     <li><a href="doctors.html">Consult Specialists</a></li>
                     <li><a href="careers.html">Career Openings</a></li>
                 </ul>
@@ -672,13 +667,13 @@
             <div class="footer-col">
                 <h4>Medical Verticals</h4>
                 <ul class="footer-links">
-                    <li><a href="specialties.html?filter=surgery" class="dept-footer-link" data-filter="surgery">IVF &
+                    <li><a href="services.html?filter=surgery" class="dept-footer-link" data-filter="surgery">IVF &
                             Fertility Solutions</a></li>
-                    <li><a href="specialties.html?filter=maternity" class="dept-footer-link"
+                    <li><a href="services.html?filter=maternity" class="dept-footer-link"
                             data-filter="maternity">Pregnancy & Maternity Care</a></li>
-                    <li><a href="specialties.html?filter=icu" class="dept-footer-link" data-filter="icu">NICU & Neonatal
+                    <li><a href="services.html?filter=icu" class="dept-footer-link" data-filter="icu">NICU & Neonatal
                             Care</a></li>
-                    <li><a href="specialties.html?filter=laparoscopy" class="dept-footer-link"
+                    <li><a href="services.html?filter=laparoscopy" class="dept-footer-link"
                             data-filter="laparoscopy">Fertility Endoscopy & Women's Health</a></li>
                 </ul>
             </div>
@@ -745,12 +740,7 @@
 
     </div>
 
-    <!-- Scroll to Top Button -->
-    <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to Top">
-        <svg viewBox="0 0 24 24">
-            <polyline points="18 15 12 9 6 15" />
-        </svg>
-    </button>
+    <!-- Scroll to Top Button removed to avoid overlap with WhatsApp FAB -->
 
     <!-- DYNAMIC DIALOG MODALS -->
     <!-- Book Consultation Modal -->
@@ -765,14 +755,58 @@
                 <div class="form-group-row">
                     <div class="form-group">
                         <label for="modalBookingDepartment">Select Service <span class="req">*</span></label>
-                        <select id="modalBookingDepartment" name="department" required>
-                            <option value="" disabled selected>-- Choose Service --</option>
-                            <option value="surgery">IVF & Fertility Solutions</option>
-                            <option value="maternity">Pregnancy & Maternity Care</option>
-                            <option value="icu">NICU & Neonatal Care</option>
-                            <option value="laparoscopy">Fertility Endoscopy & Women's Health</option>
+                        <!-- Custom Select Wrapper -->
+                        <div class="custom-select-wrapper">
+                            <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="modal-custom-options-list">
+                                <span>Select Service</span>
+                                <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <div class="custom-options-container" id="modal-custom-options-list" role="listbox">
+                                <div class="custom-option" data-value="Obstetrics" role="option">Obstetrics</div>
+                                <div class="custom-option" data-value="High Risk Pregnancy" role="option">High Risk Pregnancy</div>
+                                <div class="custom-option" data-value="Gynecology" role="option">Gynecology</div>
+                                <div class="custom-option" data-value="Laparoscopic Surgery" role="option">Laparoscopic Surgery</div>
+                                <div class="custom-option" data-value="Infertility Treatment" role="option">Infertility Treatment</div>
+                                <div class="custom-option" data-value="IVF" role="option">IVF</div>
+                                <div class="custom-option" data-value="Normal Delivery" role="option">Normal Delivery</div>
+                                <div class="custom-option" data-value="Caesarean Section" role="option">Caesarean Section</div>
+                                <div class="custom-option" data-value="Hysteroscopy" role="option">Hysteroscopy</div>
+                                <div class="custom-option" data-value="Colposcopy" role="option">Colposcopy</div>
+                                <div class="custom-option" data-value="Family Planning" role="option">Family Planning</div>
+                                <div class="custom-option" data-value="Menopause Care" role="option">Menopause Care</div>
+                                <div class="custom-option" data-value="PCOS Treatment" role="option">PCOS Treatment</div>
+                                <div class="custom-option" data-value="Endometriosis" role="option">Endometriosis</div>
+                                <div class="custom-option" data-value="Fibroid Treatment" role="option">Fibroid Treatment</div>
+                                <div class="custom-option" data-value="Ovarian Cyst Treatment" role="option">Ovarian Cyst Treatment</div>
+                                <div class="custom-option" data-value="Antenatal Care" role="option">Antenatal Care</div>
+                                <div class="custom-option" data-value="Postnatal Care" role="option">Postnatal Care</div>
+                                <div class="custom-option" data-value="Neonatal Care" role="option">Neonatal Care</div>
+                            </div>
+                        </div>
+                        <!-- Hidden select backing element -->
+                        <select id="modalBookingDepartment" name="department" required style="display: none;">
+                            <option value="" disabled selected>Select Service</option>
+                            <option value="Obstetrics">Obstetrics</option>
+                            <option value="High Risk Pregnancy">High Risk Pregnancy</option>
+                            <option value="Gynecology">Gynecology</option>
+                            <option value="Laparoscopic Surgery">Laparoscopic Surgery</option>
+                            <option value="Infertility Treatment">Infertility Treatment</option>
+                            <option value="IVF">IVF</option>
+                            <option value="Normal Delivery">Normal Delivery</option>
+                            <option value="Caesarean Section">Caesarean Section</option>
+                            <option value="Hysteroscopy">Hysteroscopy</option>
+                            <option value="Colposcopy">Colposcopy</option>
+                            <option value="Family Planning">Family Planning</option>
+                            <option value="Menopause Care">Menopause Care</option>
+                            <option value="PCOS Treatment">PCOS Treatment</option>
+                            <option value="Endometriosis">Endometriosis</option>
+                            <option value="Fibroid Treatment">Fibroid Treatment</option>
+                            <option value="Ovarian Cyst Treatment">Ovarian Cyst Treatment</option>
+                            <option value="Antenatal Care">Antenatal Care</option>
+                            <option value="Postnatal Care">Postnatal Care</option>
+                            <option value="Neonatal Care">Neonatal Care</option>
                         </select>
-                        <span class="error-msg" id="modalErrDepartment">Please select a service category.</span>
+                        <span class="error-msg" id="modalErrDepartment">Please select a service.</span>
                     </div>
 
                     <div class="form-group">
@@ -821,7 +855,7 @@
                     <div class="form-group">
                         <label for="modalBookingPhone">Phone Number <span class="req">*</span></label>
                         <input type="tel" id="modalBookingPhone" name="phone" placeholder="Enter 10-digit number"
-                            required>
+                            maxlength="10" inputmode="numeric" pattern="[0-9]{10}" required>
                         <span class="error-msg" id="modalErrPhone">Please enter a valid 10-digit phone number.</span>
                     </div>
 

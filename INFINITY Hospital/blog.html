@@ -40,6 +40,8 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -87,7 +89,15 @@
             <nav class="nav-menu" id="navMenu">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="about.html" class="nav-link">About Us</a>
-                <a href="specialties.html" class="nav-link">Specialties</a>
+                <div class="nav-dropdown">
+                    <a href="services.html" class="nav-link nav-link-dropdown" aria-haspopup="true" aria-expanded="false" id="servicesDropdownToggle">Services <span class="dropdown-chevron" aria-hidden="true"></span></a>
+                    <div class="dropdown-menu" role="menu" aria-labelledby="servicesDropdownToggle">
+                        <a href="services.html?filter=surgery" class="dropdown-item">IVF & Fertility</a>
+                        <a href="services.html?filter=maternity" class="dropdown-item">Pregnancy Care</a>
+                        <a href="services.html?filter=icu" class="dropdown-item">NICU & Neonatal Care</a>
+                        <a href="services.html?filter=laparoscopy" class="dropdown-item">Fertility Endoscopy</a>
+                    </div>
+                </div>
                 <a href="doctors.html" class="nav-link">Our Doctors</a>
                 <a href="blog.html" class="nav-link active">Blog</a>
                 <a href="careers.html" class="nav-link">Careers</a>
@@ -97,62 +107,17 @@
             <!-- CTA & Burger Action Buttons -->
             <div class="nav-actions">
                 <a href="index.html#appointment" class="btn btn-primary btn-sm hide-tablet">Book Consultation</a>
-                <button class="burger-menu" id="burgerToggle" aria-label="Toggle Navigation">
-                    <span class="line"></span>
-                    <span class="line"></span>
-                    <span class="line"></span>
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- MOBILE DRAWER MENU -->
-    <div class="mobile-drawer" id="mobileDrawer">
-        <div class="drawer-header">
-            <span class="brand-name">INFINITY MATERNITY & IVF CENTRE</span>
-            <button class="btn-close" id="drawerClose" aria-label="Close Navigation">&times;</button>
-        </div>
-        <nav class="drawer-nav">
-            <a href="index.html" class="drawer-link">Home</a>
-            <a href="about.html" class="drawer-link">About Us</a>
-            <a href="specialties.html" class="drawer-link">Specialties & Departments</a>
-            <a href="doctors.html" class="drawer-link">Our Doctors</a>
-            <a href="blog.html" class="drawer-link">Blog</a>
-            <a href="careers.html" class="drawer-link">Careers</a>
-            <a href="contact.html" class="drawer-link">Contact Us</a>
-            <div class="drawer-cta-wrapper">
-                <a href="index.html#appointment" class="btn btn-primary btn-block drawer-booking-btn">Book
-                    Consultation</a>
-                <a href="tel:+919423983749" class="btn btn-danger btn-block text-center mt-2">Maternity Hotline: +91
-                    94239 83749</a>
-            </div>
-        </nav>
-    </div>
-    <div class="drawer-overlay" id="drawerOverlay"></div>
-
     <main>
-        <!-- BREADCRUMB HERO SECTION -->
-        <section class="section bg-light" style="padding: 3rem 0; border-bottom: 1px solid var(--border-color);">
-            <div class="container">
-                <span class="section-tag">Parenthood Guides</span>
-                <h1 style="font-size: clamp(1.75rem, 5vw, 2.5rem); margin-bottom: 0.5rem;">Parenthood Journey & Fertility Blog</h1>
-                <p style="margin-bottom: 0; font-size: 1rem; color: var(--light-text);">
-                    <a href="index.html"
-                        style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Home</a>
-                    &nbsp;&raquo;&nbsp;
-                    <span style="color: var(--light-text);">Blog</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- LATEST BLOGS SECTION -->
         <section class="section">
             <div class="container">
                 <div class="section-header text-center">
                     <span class="section-tag">Expert Insights</span>
                     <h2 class="section-title">Latest Fertility & Pregnancy Care Articles</h2>
-                    <p class="section-desc mx-auto">Stay informed with supportive tips, specialist advice, and wellness
-                        updates written by senior experts at INFINITY Maternity & IVF Centre.</p>
+                    <p class="section-desc mx-auto">Stay informed with supportive tips, specialist advice, and wellness updates written by senior experts at INFINITY Maternity & IVF Centre.</p>
                 </div>
 
                 <div class="grid grid-3 mt-5">
@@ -221,7 +186,7 @@
                         <div class="blog-details">
                             <span class="blog-date">26 June</span>
                             <h3>Laparoscopic Cystectomy Successfully Performed</h3>
-                            <p class="blog-excerpt">A 38-year-old female patient was diagnosed with a 12 &times; 11 cm cystadenoma (benign ovarian tumour). She successfully underwent laparoscopic cystectomy...</p>
+                            <p class="blog-excerpt">A 38-year-old female patient was diagnosed with a 12 × 11 cm cystadenoma (benign ovarian tumour). She successfully underwent laparoscopic cystectomy...</p>
                             <button type="button" class="btn-read-more" data-blog="blog-4">Read Full Article
                                 &raquo;</button>
                         </div>
@@ -295,7 +260,7 @@
                 <ul class="footer-links">
                     <li><a href="index.html">Home Base</a></li>
                     <li><a href="about.html">About Our Mission</a></li>
-                    <li><a href="specialties.html">Specialties & Wards</a></li>
+                    <li><a href="services.html">Services</a></li>
                     <li><a href="doctors.html">Consult Specialists</a></li>
                     <li><a href="careers.html">Career Openings</a></li>
                 </ul>
@@ -304,13 +269,13 @@
             <div class="footer-col">
                 <h4>Medical Verticals</h4>
                 <ul class="footer-links">
-                    <li><a href="specialties.html?filter=surgery" class="dept-footer-link" data-filter="surgery">IVF &
+                    <li><a href="services.html?filter=surgery" class="dept-footer-link" data-filter="surgery">IVF &
                             Fertility Solutions</a></li>
-                    <li><a href="specialties.html?filter=maternity" class="dept-footer-link"
+                    <li><a href="services.html?filter=maternity" class="dept-footer-link"
                             data-filter="maternity">Pregnancy & Maternity Care</a></li>
-                    <li><a href="specialties.html?filter=icu" class="dept-footer-link" data-filter="icu">NICU & Neonatal
+                    <li><a href="services.html?filter=icu" class="dept-footer-link" data-filter="icu">NICU & Neonatal
                             Care</a></li>
-                    <li><a href="specialties.html?filter=laparoscopy" class="dept-footer-link"
+                    <li><a href="services.html?filter=laparoscopy" class="dept-footer-link"
                             data-filter="laparoscopy">Fertility Endoscopy & Women's Health</a></li>
                 </ul>
             </div>
@@ -340,80 +305,53 @@
         </div>
     </footer>
 
-    <!-- FLOATING ACTIONS -->
-    <div class="floating-actions" id="floatingActions">
-        <!-- Call Button -->
-        <a href="tel:+919423983749" class="float-btn float-call" aria-label="Call Us">
-            <svg viewBox="0 0 24 24" class="float-icon">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="float-tooltip">Call Us</span>
-        </a>
-        <!-- WhatsApp Button -->
-        <a href="https://wa.me/919423983749" class="float-btn float-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-            <svg viewBox="0 0 24 24" class="float-icon">
-                <path d="M12.008 0C5.397 0 .06 5.348.06 11.957c.001 2.1.548 4.145 1.587 5.946L0 24l6.335-1.662c1.745.954 3.712 1.455 5.717 1.456 6.613 0 11.95-5.34 11.953-11.997A11.98 11.98 0 0 0 12.008 0zm6.59 16.953c-.273.766-1.57 1.408-2.155 1.5-1.026.16-2.222.42-5.467-1.042-3.136-1.407-5.11-4.63-5.267-4.847-.156-.217-1.266-1.747-1.266-3.33 0-1.58.825-2.35 1.118-2.656.294-.306.65-.383.878-.383.228 0 .456.002.652.012.203.01.46.008.72.673.275.703.94 2.366 1.02 2.535.084.17.14.368.026.602-.114.234-.173.379-.342.585-.17.206-.356.46-.508.618-.17.17-.348.356-.15.703.197.347.88 1.492 1.884 2.399 1.294 1.162 2.385 1.523 2.723 1.69.338.167.536.14.737-.1.2-.239.878-1.05.11-1.49-.66-.38-1.294-.766-1.57-.766-.276 0-.482.17-.737.46-.255.29-.536.6-.74.493-.203-.11-.856-.326-1.63-1.037-.604-.555-.95-1.127-1.07-1.332-.12-.2-.012-.308.087-.406.09-.09.2-.238.3-.357.1-.12.13-.2.2-.338.07-.138.03-.26-.02-.38-.05-.12-.46-1.14-.63-1.56-.17-.417-.35-.357-.48-.363-.12-.006-.26-.008-.4-.008-.14 0-.36.05-.55.263-.19.214-.73.74-.73 1.804 0 1.066.75 2.1 1.05 2.536.084.17.14.368.026.602z" fill="currentColor"/>
-            </svg>
-            <span class="float-tooltip">WhatsApp</span>
-        </a>
-        <!-- Instagram Button -->
-        <a href="https://www.instagram.com/infinityhospital19" class="float-btn float-instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" class="float-icon">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="float-tooltip">Instagram</span>
-        </a>
-        <!-- Facebook Button -->
-        <a href="https://www.facebook.com/profile.php?id=61566189864378" class="float-btn float-facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" class="float-icon">
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="float-tooltip">Facebook</span>
-        </a>
-    </div>
 
-    <!-- Scroll to Top Button -->
-    <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to Top">
-        <svg viewBox="0 0 24 24">
-            <polyline points="18 15 12 9 6 15" />
-        </svg>
-    </button>
-
-    <!-- DYNAMIC BLOG MODAL READER -->
-    <div class="modal-system" id="blogReaderModal">
-        <div class="modal-card modal-large">
-            <button class="modal-close-corner" data-modal="blogReaderModal">&times;</button>
-            <div class="modal-blog-header">
-                <span class="blog-modal-cat" id="blogModalCategory">Fertility & IVF</span>
-                <span class="blog-modal-date" id="blogModalDate">June 15, 2026</span>
-                <h2 id="blogModalTitle">Your Journey to Parenthood</h2>
-            </div>
-            <div class="modal-blog-body" id="blogModalContent">
-                <!-- Content injected dynamically by JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- DYNAMIC DIALOG MODALS -->
-    <!-- Book Consultation Modal -->
-    <div class="modal-system" id="bookConsultationModal">
-        <div class="modal-card modal-booking-card">
-            <button class="modal-close-corner" data-modal="bookConsultationModal" aria-label="Close Modal">&times;</button>
-            <h3 class="form-title" style="margin-bottom: 2rem;">Book Consultation</h3>
-            
-            <form id="modalAppointmentForm" class="appointment-form" novalidate>
-                <!-- Department and Doctor Select Grid -->
-                <div class="form-group-row">
-                    <div class="form-group">
-                        <label for="modalBookingDepartment">Select Service <span class="req">*</span></label>
-                        <select id="modalBookingDepartment" name="department" required>
-                            <option value="" disabled selected>-- Choose Service --</option>
-                            <option value="surgery">IVF & Fertility Solutions</option>
-                            <option value="maternity">Pregnancy & Maternity Care</option>
-                            <option value="icu">NICU & Neonatal Care</option>
-                            <option value="laparoscopy">Fertility Endoscopy & Women's Health</option>
+0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <div class="custom-options-container" id="modal-custom-options-list" role="listbox">
+                                <div class="custom-option" data-value="Obstetrics" role="option">Obstetrics</div>
+                                <div class="custom-option" data-value="High Risk Pregnancy" role="option">High Risk Pregnancy</div>
+                                <div class="custom-option" data-value="Gynecology" role="option">Gynecology</div>
+                                <div class="custom-option" data-value="Laparoscopic Surgery" role="option">Laparoscopic Surgery</div>
+                                <div class="custom-option" data-value="Infertility Treatment" role="option">Infertility Treatment</div>
+                                <div class="custom-option" data-value="IVF" role="option">IVF</div>
+                                <div class="custom-option" data-value="Normal Delivery" role="option">Normal Delivery</div>
+                                <div class="custom-option" data-value="Caesarean Section" role="option">Caesarean Section</div>
+                                <div class="custom-option" data-value="Hysteroscopy" role="option">Hysteroscopy</div>
+                                <div class="custom-option" data-value="Colposcopy" role="option">Colposcopy</div>
+                                <div class="custom-option" data-value="Family Planning" role="option">Family Planning</div>
+                                <div class="custom-option" data-value="Menopause Care" role="option">Menopause Care</div>
+                                <div class="custom-option" data-value="PCOS Treatment" role="option">PCOS Treatment</div>
+                                <div class="custom-option" data-value="Endometriosis" role="option">Endometriosis</div>
+                                <div class="custom-option" data-value="Fibroid Treatment" role="option">Fibroid Treatment</div>
+                                <div class="custom-option" data-value="Ovarian Cyst Treatment" role="option">Ovarian Cyst Treatment</div>
+                                <div class="custom-option" data-value="Antenatal Care" role="option">Antenatal Care</div>
+                                <div class="custom-option" data-value="Postnatal Care" role="option">Postnatal Care</div>
+                                <div class="custom-option" data-value="Neonatal Care" role="option">Neonatal Care</div>
+                            </div>
+                        </div>
+                        <!-- Hidden select backing element -->
+                        <select id="modalBookingDepartment" name="department" required style="display: none;">
+                            <option value="" disabled selected>Select Service</option>
+                            <option value="Obstetrics">Obstetrics</option>
+                            <option value="High Risk Pregnancy">High Risk Pregnancy</option>
+                            <option value="Gynecology">Gynecology</option>
+                            <option value="Laparoscopic Surgery">Laparoscopic Surgery</option>
+                            <option value="Infertility Treatment">Infertility Treatment</option>
+                            <option value="IVF">IVF</option>
+                            <option value="Normal Delivery">Normal Delivery</option>
+                            <option value="Caesarean Section">Caesarean Section</option>
+                            <option value="Hysteroscopy">Hysteroscopy</option>
+                            <option value="Colposcopy">Colposcopy</option>
+                            <option value="Family Planning">Family Planning</option>
+                            <option value="Menopause Care">Menopause Care</option>
+                            <option value="PCOS Treatment">PCOS Treatment</option>
+                            <option value="Endometriosis">Endometriosis</option>
+                            <option value="Fibroid Treatment">Fibroid Treatment</option>
+                            <option value="Ovarian Cyst Treatment">Ovarian Cyst Treatment</option>
+                            <option value="Antenatal Care">Antenatal Care</option>
+                            <option value="Postnatal Care">Postnatal Care</option>
+                            <option value="Neonatal Care">Neonatal Care</option>
                         </select>
                         <span class="error-msg" id="modalErrDepartment">Please select a service category.</span>
                     </div>
@@ -462,7 +400,7 @@
                 <div class="form-group-row">
                     <div class="form-group">
                         <label for="modalBookingPhone">Phone Number <span class="req">*</span></label>
-                        <input type="tel" id="modalBookingPhone" name="phone" placeholder="Enter 10-digit number" required>
+                        <input type="tel" id="modalBookingPhone" name="phone" placeholder="Enter 10-digit number" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" required>
                         <span class="error-msg" id="modalErrPhone">Please enter a valid 10-digit phone number.</span>
                     </div>
 

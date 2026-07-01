@@ -51,38 +51,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
         startSlideshow();
     }
-
-
-    // --- 2. MOBILE NAVIGATION DRAWER ---
-    safeInit({
-        burger: "#burgerToggle",
-        drawer: "#mobileDrawer",
-        closeBtn: "#drawerClose",
-        overlay: "#drawerOverlay"
-    }, (burger, drawer, closeBtn, overlay) => {
-        const openDrawer = () => {
-            drawer.classList.add("open");
-            overlay.classList.add("active");
-            document.body.style.overflow = "hidden";
+    // --- SERVICES NAV DROPDOWN ---
+    const serviceDropdowns = document.querySelectorAll(".nav-dropdown");
+    if (serviceDropdowns.length > 0) {
+        const closeAllNavDropdowns = () => {
+            document.querySelectorAll(".nav-dropdown.show").forEach(openDropdown => {
+                openDropdown.classList.remove("show");
+                const toggle = openDropdown.querySelector(".nav-link-dropdown");
+                if (toggle) toggle.setAttribute("aria-expanded", "false");
+            });
         };
 
-        const closeDrawer = () => {
-            drawer.classList.remove("open");
-            overlay.classList.remove("active");
-            document.body.style.overflow = "";
-        };
+        serviceDropdowns.forEach(dropdown => {
+            const toggle = dropdown.querySelector(".nav-link-dropdown");
+            const menu = dropdown.querySelector(".dropdown-menu");
+            if (!toggle || !menu) return;
 
-        burger.addEventListener("click", openDrawer);
-        closeBtn.addEventListener("click", closeDrawer);
-        overlay.addEventListener("click", closeDrawer);
-        
-        const drawerLinks = document.querySelectorAll(".drawer-link");
-        drawerLinks.forEach(link => {
-            link.addEventListener("click", closeDrawer);
+            const toggleDropdown = (e) => {
+                const isOpen = dropdown.classList.contains("show");
+                if (!isOpen) {
+                    e.preventDefault();
+                    closeAllNavDropdowns();
+                    dropdown.classList.add("show");
+                    toggle.setAttribute("aria-expanded", "true");
+                }
+            };
+
+            toggle.addEventListener("click", toggleDropdown);
+            toggle.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    toggleDropdown(e);
+                }
+            });
+
+            menu.querySelectorAll(".dropdown-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    closeAllNavDropdowns();
+                });
+            });
         });
-    });
 
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".nav-dropdown")) {
+                closeAllNavDropdowns();
+            }
+        });
 
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeAllNavDropdowns();
+            }
+        });
+    }
     // --- 3. STICKY NAV ACTION & ACTIVE STATE INDICATOR ---
     const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll(".nav-link");
@@ -134,13 +154,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const statsNumbers = document.querySelectorAll(".stat-number");
     if (statisticsSection && statsNumbers.length > 0) {
         let countersAnimated = false;
+        let statsObserver = null;
 
         const animateCounters = () => {
             statsNumbers.forEach(stat => {
                 const target = parseInt(stat.getAttribute("data-target"), 10);
                 let count = 0;
-                const speed = target / 80;
-                
+                const speed = Math.max(1, target / 80);
+
                 const updateCount = () => {
                     count += speed;
                     if (count < target) {
@@ -154,22 +175,47 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         };
 
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !countersAnimated) {
-                    animateCounters();
-                    countersAnimated = true;
-                }
-            });
-        }, { threshold: 0.3 });
+        const startCounterAnimation = () => {
+            if (countersAnimated) return;
+            animateCounters();
+            countersAnimated = true;
+            if (statsObserver) {
+                statsObserver.disconnect();
+                statsObserver = null;
+            }
+        };
 
-        statsObserver.observe(statisticsSection);
+        const isElementVisible = (element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.top < window.innerHeight && rect.bottom >= 0;
+        };
+
+        if ('IntersectionObserver' in window) {
+            statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !countersAnimated) {
+                        startCounterAnimation();
+                    }
+                });
+            }, { threshold: 0.3 });
+            statsObserver.observe(statisticsSection);
+        }
+
+        const checkStatsVisibility = () => {
+            if (!countersAnimated && isElementVisible(statisticsSection)) {
+                startCounterAnimation();
+            }
+        };
+
+        checkStatsVisibility();
+        window.addEventListener("scroll", checkStatsVisibility, { passive: true });
+        window.addEventListener("resize", checkStatsVisibility);
     }
 
 
     // --- 6. DEPARTMENTS / SPECIALTIES CARD FILTER ---
     const filterButtons = document.querySelectorAll(".filter-btn");
-    const departmentCards = document.querySelectorAll(".department-card");
+    const departmentCards = document.querySelectorAll(".department-card, .service-card");
     if (filterButtons.length > 0 && departmentCards.length > 0) {
         filterButtons.forEach(btn => {
             btn.addEventListener("click", () => {
@@ -207,12 +253,41 @@ document.addEventListener("DOMContentLoaded", () => {
         ]
     };
 
+    const serviceToDeptMap = {
+        "Obstetrics": "maternity",
+        "High Risk Pregnancy": "maternity",
+        "Gynecology": "maternity",
+        "Laparoscopic Surgery": "laparoscopy",
+        "Infertility Treatment": "surgery",
+        "IVF": "surgery",
+        "Normal Delivery": "maternity",
+        "Caesarean Section": "maternity",
+        "Hysteroscopy": "laparoscopy",
+        "Colposcopy": "laparoscopy",
+        "Family Planning": "maternity",
+        "Menopause Care": "maternity",
+        "PCOS Treatment": "laparoscopy",
+        "Endometriosis": "laparoscopy",
+        "Fibroid Treatment": "laparoscopy",
+        "Ovarian Cyst Treatment": "laparoscopy",
+        "Antenatal Care": "maternity",
+        "Postnatal Care": "maternity",
+        "Neonatal Care": "icu"
+    };
+
+    // Map compact hero service labels to internal department keys
+    serviceToDeptMap["IVF & Fertility"] = "surgery";
+    serviceToDeptMap["Pregnancy Care"] = "maternity";
+    serviceToDeptMap["NICU & Neonatal Care"] = "icu";
+    serviceToDeptMap["Fertility Endoscopy"] = "laparoscopy";
+
     safeInit({
         deptSelect: "#bookingDepartment",
         docSelect: "#bookingDoctor"
     }, (deptSelect, docSelect) => {
         deptSelect.addEventListener("change", () => {
-            const selectedDept = deptSelect.value;
+            const selectedVal = deptSelect.value;
+            const selectedDept = serviceToDeptMap[selectedVal] || selectedVal;
             docSelect.innerHTML = '<option value="" disabled selected>-- Choose Doctor --</option>';
             
             if (selectedDept && doctorDatabase[selectedDept]) {
@@ -231,7 +306,8 @@ document.addEventListener("DOMContentLoaded", () => {
         docSelect: "#modalBookingDoctor"
     }, (deptSelect, docSelect) => {
         deptSelect.addEventListener("change", () => {
-            const selectedDept = deptSelect.value;
+            const selectedVal = deptSelect.value;
+            const selectedDept = serviceToDeptMap[selectedVal] || selectedVal;
             docSelect.innerHTML = '<option value="" disabled selected>-- Choose Doctor --</option>';
             
             if (selectedDept && doctorDatabase[selectedDept]) {
@@ -242,6 +318,232 @@ document.addEventListener("DOMContentLoaded", () => {
                     docSelect.appendChild(option);
                 });
             }
+        });
+    });
+
+    // --- CUSTOM VERTICAL SELECTOR IMPLEMENTATION ---
+    function initCustomSelect(wrapperSelector, hiddenSelectSelector) {
+        const wrapper = document.querySelector(wrapperSelector);
+        if (!wrapper) return;
+        const trigger = wrapper.querySelector(".custom-select-trigger");
+        const optionsContainer = wrapper.querySelector(".custom-options-container");
+        const options = wrapper.querySelectorAll(".custom-option");
+        // track currently focused option index for keyboard navigation
+        let activeIndex = -1;
+        const hiddenSelect = document.querySelector(hiddenSelectSelector);
+
+        if (!trigger || !optionsContainer || !hiddenSelect) return;
+
+        // Toggle dropdown open/close
+        trigger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            document.querySelectorAll(".custom-select-wrapper").forEach(w => {
+                if (w !== wrapper) w.classList.remove("open");
+            });
+            wrapper.classList.toggle("open");
+            const isOpen = wrapper.classList.contains("open");
+            trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            if (isOpen) {
+                const selected = wrapper.querySelector('.custom-option.selected');
+                activeIndex = selected ? Array.from(options).indexOf(selected) : 0;
+                if (options[activeIndex]) {
+                    options[activeIndex].focus();
+                    options[activeIndex].scrollIntoView({ block: 'nearest' });
+                }
+            }
+        });
+
+        // If the dropdown is inside an overflow-hidden hero, position options fixed to avoid clipping
+        const positionOptionsFixed = () => {
+            const rect = trigger.getBoundingClientRect();
+            const docLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            const docTop = window.pageYOffset || document.documentElement.scrollTop;
+            optionsContainer.style.position = 'fixed';
+            optionsContainer.style.left = rect.left + 'px';
+            optionsContainer.style.top = (rect.bottom + 8) + 'px';
+            optionsContainer.style.width = rect.width + 'px';
+            optionsContainer.style.zIndex = 3000;
+        };
+
+        const resetOptionsPosition = () => {
+            optionsContainer.style.position = '';
+            optionsContainer.style.left = '';
+            optionsContainer.style.top = '';
+            optionsContainer.style.width = '';
+            optionsContainer.style.zIndex = '';
+        };
+
+        // When opening, focus the selected option (or first) for keyboard users
+        wrapper.addEventListener("transitionend", (ev) => {
+            // No-op; keep for future transition hooks
+        });
+
+        // Click outside closes the dropdown
+        document.addEventListener("click", (e) => {
+            if (!wrapper.contains(e.target)) {
+                wrapper.classList.remove("open");
+                trigger.setAttribute("aria-expanded", "false");
+                // reset any fixed positioning
+                resetOptionsPosition();
+            }
+        });
+
+        // Handle option click
+        options.forEach(opt => {
+            // Ensure each option has an id for aria referencing
+            if (!opt.id) opt.id = `custom-opt-${Math.random().toString(36).substr(2,6)}`;
+            opt.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const val = opt.getAttribute("data-value");
+                const text = opt.textContent;
+
+                options.forEach(o => o.classList.remove("selected"));
+                opt.classList.add("selected");
+
+                trigger.querySelector("span").textContent = text;
+                hiddenSelect.value = val;
+                
+                hiddenSelect.dispatchEvent(new Event("change"));
+
+                wrapper.classList.remove("open");
+                trigger.setAttribute("aria-expanded", "false");
+                trigger.focus();
+            });
+        });
+
+        // Keyboard navigation support
+        trigger.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                if (!wrapper.classList.contains("open")) {
+                    wrapper.classList.add("open");
+                    trigger.setAttribute("aria-expanded", "true");
+                    // focus selected or first option when opening via keyboard
+                    const selected = wrapper.querySelector('.custom-option.selected');
+                    activeIndex = selected ? Array.from(options).indexOf(selected) : 0;
+                    if (options[activeIndex]) {
+                        options[activeIndex].focus();
+                        options[activeIndex].scrollIntoView({ block: 'nearest' });
+                    }
+                }
+                
+                if (options.length > 0) {
+                    if (e.key === "ArrowDown") {
+                        activeIndex = (activeIndex + 1) % options.length;
+                        options[activeIndex].focus();
+                    } else if (e.key === "ArrowUp") {
+                        activeIndex = (activeIndex - 1 + options.length) % options.length;
+                        options[activeIndex].focus();
+                    }
+                }
+            } else if (e.key === "Escape" || e.key === "Tab") {
+                wrapper.classList.remove("open");
+                trigger.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        options.forEach((opt, idx) => {
+            opt.setAttribute("tabindex", "-1");
+            opt.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    activeIndex = (idx + 1) % options.length;
+                    options[activeIndex].focus();
+                } else if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    activeIndex = (idx - 1 + options.length) % options.length;
+                    options[activeIndex].focus();
+                } else if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    opt.click();
+                } else if (e.key === "Escape") {
+                    wrapper.classList.remove("open");
+                    trigger.setAttribute("aria-expanded", "false");
+                    trigger.focus();
+                }
+            });
+        });
+
+        // When opening the dropdown, if it's inside the hero area (which hides overflow), position fixed
+        const openObserver = new MutationObserver(() => {
+            if (wrapper.classList.contains('open')) {
+                // detect if ancestor has overflow hidden that would clip
+                const heroAncestor = wrapper.closest('.hero-section') || wrapper.classList.contains('hero-service-select-wrapper');
+                if (heroAncestor) {
+                    positionOptionsFixed();
+                }
+            } else {
+                resetOptionsPosition();
+            }
+        });
+        openObserver.observe(wrapper, { attributes: true, attributeFilter: ['class'] });
+
+        // Close/reset on scroll/resize to avoid misposition
+        window.addEventListener('resize', () => { if (!wrapper.classList.contains('open')) resetOptionsPosition(); else positionOptionsFixed(); });
+        window.addEventListener('scroll', () => { if (wrapper.classList.contains('open')) positionOptionsFixed(); });
+    }
+
+    function selectCustomOptionByValue(wrapperSelector, hiddenSelectSelector, value) {
+        const wrapper = document.querySelector(wrapperSelector);
+        if (!wrapper) return;
+        const trigger = wrapper.querySelector(".custom-select-trigger");
+        const options = wrapper.querySelectorAll(".custom-option");
+        const hiddenSelect = document.querySelector(hiddenSelectSelector);
+
+        if (!trigger || !hiddenSelect) return;
+
+        const targetOption = Array.from(options).find(opt => opt.getAttribute("data-value") === value);
+        if (targetOption) {
+            options.forEach(o => o.classList.remove("selected"));
+            targetOption.classList.add("selected");
+            trigger.querySelector("span").textContent = targetOption.textContent;
+            hiddenSelect.value = value;
+            hiddenSelect.dispatchEvent(new Event("change"));
+        }
+    }
+
+    // Initialize Custom Select elements
+    initCustomSelect(".booking-form-wrapper .custom-select-wrapper", "#bookingDepartment");
+    initCustomSelect(".modal-booking-card .custom-select-wrapper", "#modalBookingDepartment");
+
+    // Enforce 10-digit numeric constraint on all telephone inputs across site
+    document.querySelectorAll('input[type="tel"]').forEach(input => {
+        // Set HTML attributes without changing styling
+        input.setAttribute('maxlength', '10');
+        input.setAttribute('inputmode', 'numeric');
+        input.setAttribute('pattern', '[0-9]{10}');
+
+        // Prevent non-numeric characters on input
+        input.addEventListener('input', (e) => {
+            const cleaned = e.target.value.replace(/\D/g, '').slice(0, 10);
+            if (e.target.value !== cleaned) e.target.value = cleaned;
+        });
+
+        // Prevent pasting non-numeric values
+        input.addEventListener('paste', (e) => {
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            if (!/^[0-9]+$/.test(paste)) {
+                e.preventDefault();
+                return;
+            }
+            // allow paste but trim to 10 digits
+            e.preventDefault();
+            const current = e.target.value.replace(/\D/g, '');
+            const combined = (current + paste).replace(/\D/g, '').slice(0, 10);
+            e.target.value = combined;
+        });
+
+        // Validate length on blur and on form submit via HTML validation
+        input.addEventListener('blur', () => {
+            if (input.value.length !== 10) {
+                input.setCustomValidity('Please enter a valid 10-digit mobile number');
+            } else {
+                input.setCustomValidity('');
+            }
+        });
+
+        input.addEventListener('invalid', () => {
+            if (input.value.length !== 10) input.setCustomValidity('Please enter a valid 10-digit mobile number');
         });
     });
 
@@ -306,27 +608,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const ctas = document.querySelectorAll('a[href$="#appointment"], a[href*="#appointment"], .doc-book-btn');
         ctas.forEach(cta => {
             cta.addEventListener("click", (e) => {
-                e.preventDefault();
-                
-                // Close mobile drawer if it is open
-                const mobileDrawer = document.getElementById("mobileDrawer");
-                const drawerOverlay = document.getElementById("drawerOverlay");
-                if (mobileDrawer && mobileDrawer.classList.contains("open")) {
-                    mobileDrawer.classList.remove("open");
-                    if (drawerOverlay) drawerOverlay.classList.remove("active");
-                    document.body.style.overflow = "";
+                // If the link points to index.html and we are not currently on index.html/root, let it navigate normally
+                const href = cta.getAttribute("href");
+                const isCurrentIndex = window.location.pathname.endsWith("index.html") || window.location.pathname.endsWith("/");
+                if (href && href.includes("index.html") && !isCurrentIndex) {
+                    return; // Let the browser handle standard redirect
                 }
+
+                e.preventDefault();
 
                 // Extract parameters if available
                 let dept = cta.getAttribute("data-dept");
+                let service = cta.getAttribute("data-service");
                 let doc = cta.getAttribute("data-doc");
                 
                 // If it's a link, we can check for href query parameters
-                if (!dept && cta.getAttribute("href")) {
+                if (cta.getAttribute("href")) {
                     try {
                         const url = new URL(cta.href, window.location.origin);
-                        dept = url.searchParams.get("dept");
-                        doc = url.searchParams.get("doc");
+                        if (!dept) dept = url.searchParams.get("dept");
+                        if (!service) service = url.searchParams.get("service");
+                        if (!doc) doc = url.searchParams.get("doc");
                     } catch (err) {
                         // ignore parsing error
                     }
@@ -336,9 +638,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 const docSelect = document.getElementById("modalBookingDoctor");
 
                 if (deptSelect && docSelect) {
-                    if (dept) {
-                        deptSelect.value = dept;
-                        deptSelect.dispatchEvent(new Event("change"));
+                    if (service) {
+                        selectCustomOptionByValue(".modal-booking-card .custom-select-wrapper", "#modalBookingDepartment", service);
+                    } else if (dept) {
+                        const deptToServiceMap = {
+                            "surgery": "IVF",
+                            "maternity": "Obstetrics",
+                            "icu": "Neonatal Care",
+                            "laparoscopy": "Laparoscopic Surgery"
+                        };
+                        const mappedService = deptToServiceMap[dept];
+                        if (mappedService) {
+                            selectCustomOptionByValue(".modal-booking-card .custom-select-wrapper", "#modalBookingDepartment", mappedService);
+                        } else {
+                            deptSelect.value = dept;
+                            deptSelect.dispatchEvent(new Event("change"));
+                        }
                     }
                     if (doc) {
                         docSelect.value = decodeURIComponent(doc);
@@ -354,6 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.location.search.includes("book=true")) {
         const urlParams = new URLSearchParams(window.location.search);
         const dept = urlParams.get("dept");
+        const service = urlParams.get("service");
         const doc = urlParams.get("doc");
         const bookModal = document.getElementById("bookConsultationModal");
         
@@ -361,9 +677,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const deptSelect = document.getElementById("modalBookingDepartment");
             const docSelect = document.getElementById("modalBookingDoctor");
             if (deptSelect && docSelect) {
-                if (dept) {
-                    deptSelect.value = dept;
-                    deptSelect.dispatchEvent(new Event("change"));
+                if (service) {
+                    selectCustomOptionByValue(".modal-booking-card .custom-select-wrapper", "#modalBookingDepartment", service);
+                    if (doc) {
+                        docSelect.value = decodeURIComponent(doc);
+                    }
+                } else if (dept) {
+                    const deptToServiceMap = {
+                        "surgery": "IVF",
+                        "maternity": "Obstetrics",
+                        "icu": "Neonatal Care",
+                        "laparoscopy": "Laparoscopic Surgery"
+                    };
+                    const mappedService = deptToServiceMap[dept];
+                    if (mappedService) {
+                        selectCustomOptionByValue(".modal-booking-card .custom-select-wrapper", "#modalBookingDepartment", mappedService);
+                    } else {
+                        deptSelect.value = dept;
+                        deptSelect.dispatchEvent(new Event("change"));
+                    }
                     if (doc) {
                         docSelect.value = decodeURIComponent(doc);
                     }
@@ -931,5 +1263,20 @@ document.addEventListener("DOMContentLoaded", () => {
         // Initial run
         checkFooterCollision();
     }
+
+    // Reset custom select trigger placeholders when forms are reset
+    document.querySelectorAll("form").forEach(form => {
+        form.addEventListener("reset", () => {
+            setTimeout(() => {
+                form.querySelectorAll(".custom-select-wrapper").forEach(wrapper => {
+                    const trigger = wrapper.querySelector(".custom-select-trigger span");
+                    if (trigger) {
+                        trigger.textContent = "Select Service";
+                    }
+                    wrapper.querySelectorAll(".custom-option").forEach(opt => opt.classList.remove("selected"));
+                });
+            }, 0);
+        });
+    });
 
 });
